@@ -10,7 +10,7 @@ const port = 3000;
 app.use(express.json());
 
 app.use(cors());
-
+ 
 const Task = require('./schemas/Task');
 
 app.get('/', (req, res) => {
@@ -22,7 +22,7 @@ mongoose.connect(process.env.MONGODB_URI)
     .then(() => {
         console.log('Connected to MongoDB Atlas');
         app.listen(port, () => {
-            console.log(`Server is running on port ${port}`);
+            console.log(`Server is running on http://localhost:${port}`);
         });
     })
     .catch(err => {
@@ -40,6 +40,15 @@ app.get('/tasks', async (req, res) => {
     }
 });
 
-
 // Write an endpoint to create a new task.
 
+app.post('/tasks', async (req, res) => {
+    console.log('Posting tasks...');
+    try {
+        const tasks = await db.collection.save(); 
+        res.json(tasks);
+    } catch (err) {
+        console.error('Error posting tasks:', err);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
